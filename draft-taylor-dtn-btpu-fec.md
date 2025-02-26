@@ -10,12 +10,12 @@ number:
 date:
 consensus: true
 v: 3
-area: INT
+area: ""
 workgroup: "Delay/Disruption Tolerant Networking"
 
 venue:
   group: "Delay/Disruption Tolerant Networking"
-  type: "Working Group"
+  type: ""
   mail: "dtn@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/dtn/"
   github: "ricktaylor/btpu-fec"
