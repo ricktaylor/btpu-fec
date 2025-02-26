@@ -4,16 +4,18 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>TODO - Your title</title>
-<meta content="Your Name Here" name="author">
+<title>Forward Error Correction for the Bundle Transfer Protocol</title>
+<meta content="Rick Taylor" name="author">
 <meta content="
        TODO Abstract 
     " name="description">
 <meta content="xml2rfc 3.27.0" name="generator">
-<meta content="next generation" name="keyword">
-<meta content="unicorn" name="keyword">
-<meta content="sparkling distributed ledger" name="keyword">
-<meta content="draft-todo-yourname-protocol-latest" name="ietf.draft">
+<meta content="DTN" name="keyword">
+<meta content="BPv7" name="keyword">
+<meta content="Bundle Protocol" name="keyword">
+<meta content="BTPU" name="keyword">
+<meta content="FEC" name="keyword">
+<meta content="draft-taylor-dtn-btpu-fec-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.27.0
     Python 3.12.9
@@ -29,7 +31,7 @@
     setuptools 70.3.0
     wcwidth 0.2.13
 -->
-<link href="draft-todo-yourname-protocol.xml" rel="alternate" type="application/rfc+xml">
+<link href="draft-taylor-dtn-btpu-fec.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">@font-face {
   font-family: 'Lora';
@@ -1045,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">TODO - Abbreviation</td>
+<td class="center">BTPU-FEC</td>
 <td class="right">February 2025</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Here</td>
+<td class="left">Taylor</td>
 <td class="center">Expires 30 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
@@ -1058,27 +1060,27 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div id="internal-metadata" class="document-information">
 <dl id="identifiers">
 <dt class="label-workgroup">Workgroup:</dt>
-<dd class="workgroup">WG Working Group</dd>
+<dd class="workgroup">Delay/Disruption Tolerant Networking</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-todo-yourname-protocol-latest</dd>
+<dd class="internet-draft">draft-taylor-dtn-btpu-fec-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
 <time datetime="2025-02-26" class="published">26 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
-<dd class="intended-status">Informational</dd>
+<dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
 <dd class="expires"><time datetime="2025-08-30">30 August 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
-      <div class="author-name">Y. N. Here</div>
-<div class="org">Your Organization Here</div>
+      <div class="author-name">R. Taylor</div>
+<div class="org">Aalyria Technologies</div>
 </div>
 </dd>
 </dl>
 </div>
-<h1 id="title">TODO - Your title</h1>
+<h1 id="title">Forward Error Correction for the Bundle Transfer Protocol</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">TODO Abstract<a href="#section-abstract-1" class="pilcrow">¶</a></p>
@@ -1089,14 +1091,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
 <p id="section-note.1-2">
-        The latest revision of this draft can be found at <span><a href="https://example.com/LATEST">https://example.com/LATEST</a></span>.
-        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-todo-yourname-protocol/">https://datatracker.ietf.org/doc/draft-todo-yourname-protocol/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+        The latest revision of this draft can be found at <span><a href="https://ricktaylor.github.io/btpu-fec/draft-taylor-dtn-btpu-fec.html">https://ricktaylor.github.io/btpu-fec/draft-taylor-dtn-btpu-fec.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-taylor-dtn-btpu-fec/">https://datatracker.ietf.org/doc/draft-taylor-dtn-btpu-fec/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
 <p id="section-note.1-3">
         Discussion of this document takes place on the
-        WG Working Group mailing list (<span><a href="mailto:WG@example.com">mailto:WG@example.com</a></span>),
-        which is archived at <span><a href="https://example.com/WG">https://example.com/WG</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+        Delay/Disruption Tolerant Networking Working Group mailing list (<span><a href="mailto:dtn@ietf.org">mailto:dtn@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/dtn/">https://mailarchive.ietf.org/arch/browse/dtn/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/dtn/">https://www.ietf.org/mailman/listinfo/dtn/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
 <p id="section-note.1-4">Source for this draft and an issue tracker can be found at
-        <span><a href="https://github.com/USER/REPO">https://github.com/USER/REPO</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+        <span><a href="https://github.com/ricktaylor/btpu-fec">https://github.com/ricktaylor/btpu-fec</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1150,10 +1153,29 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-forward-error-correction" class="internal xref">Forward Error Correction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1.2.1">
+                    <p id="section-toc.1-1.2.2.1.2.1.1" class="keepWithNext"><a href="#section-2.1.1" class="auto internal xref">2.1.1</a>.  <a href="#name-mapping-to-rfc-6363" class="internal xref">Mapping to RFC 6363</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1.2.2">
+                    <p id="section-toc.1-1.2.2.1.2.2.1" class="keepWithNext"><a href="#section-2.1.2" class="auto internal xref">2.1.2</a>.  <a href="#name-fec-instance-id" class="internal xref">FEC Instance ID</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1.2.3">
+                    <p id="section-toc.1-1.2.2.1.2.3.1"><a href="#section-2.1.3" class="auto internal xref">2.1.3</a>.  <a href="#name-repair-fec-payload-id" class="internal xref">Repair FEC Payload ID</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
+                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-transfer-repair-message" class="internal xref">Transfer Repair Message</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -1162,7 +1184,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
@@ -1188,6 +1210,149 @@ svg :is([fill="white"], [fill^="#fff"]) {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<div id="fec">
+<section id="section-2.1">
+        <h3 id="name-forward-error-correction">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-forward-error-correction" class="section-name selfRef">Forward Error Correction</a>
+        </h3>
+<p id="section-2.1-1">To reduce the overhead associated with repeating Messages, the protocol supports the use of forward error correction, by emitting <span><a href="#transfer-repair-message" class="internal xref">Transfer Repair Messages</a> (<a href="#transfer-repair-message" class="auto internal xref">Section 2.2</a>)</span> containing information that can be used to recover lost Messages.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">Every Transfer Message includes an unsigned 8-bit FEC Instance ID field.  The value of this field indicates the FEC scheme and parameters to be used to recover missing parts of the Bundle, and the mapping from FEC Instance ID to the associated scheme and parameters <span class="bcp14">MUST</span> be pre-agreed at both sender and receiver using an out of band mechanism.  FEC Instance ID zero (0) indicates that no FEC mechanism is in use for the Transfer.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1-3">The FEC Instance ID <span class="bcp14">MUST</span> be the same for all Messages concerned with an individual Transfer, i.e. the FEC scheme in use <span class="bcp14">MUST NOT</span> change mid-transfer.  If a receiver detects a change in FEC Instance ID during a Transfer, it <span class="bcp14">MUST</span> consider the Transfer cancelled, and ignore all future Messages associated with the Transfer.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+<div id="mapping-to-rfc-6363">
+<section id="section-2.1.1">
+          <h4 id="name-mapping-to-rfc-6363">
+<a href="#section-2.1.1" class="section-number selfRef">2.1.1. </a><a href="#name-mapping-to-rfc-6363" class="section-name selfRef">Mapping to RFC 6363</a>
+          </h4>
+<p id="section-2.1.1-1">For all non-zero values of FEC Instance ID, the protocol follows the framework defined in <span>[<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>, mapping the concepts defined in <span><a href="https://rfc-editor.org/rfc/rfc6363#section-2" class="relref">Section 2</a> of [<a href="#RFC6363" class="cite xref">RFC6363</a>]</span> to this protocol in the following manner:<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2.1.1-2">
+            <dt id="section-2.1.1-2.1">Application Data Unit (ADU):</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.2">
+              <p id="section-2.1.1-2.2.1">In this protocol a Bundle is the ADU.<a href="#section-2.1.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.3">ADU Flow:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.4">
+              <p id="section-2.1.1-2.4.1">This protocol considers all communication between a sender and receiver as a single ADU Flow, as the link-layer protocol is expected to be point-to-point in nature.<a href="#section-2.1.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.5">Application Protocol:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.6">
+              <p id="section-2.1.1-2.6.1">This protocol.<a href="#section-2.1.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.7">Content Delivery Protocol (CDP):</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.8">
+              <p id="section-2.1.1-2.8.1">This protocol is considered a CDP.<a href="#section-2.1.1-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.9">FEC Framework Configuration Information:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.10">
+              <p id="section-2.1.1-2.10.1">This protocol requires FEC framework configuration information to be delivered via some out-of-band mechanism or a-priori configuration.<a href="#section-2.1.1-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.11">FEC Repair Packet:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.12">
+              <p id="section-2.1.1-2.12.1">The <span><a href="#transfer-repair-message" class="internal xref">Transfer Repair Message</a> (<a href="#transfer-repair-message" class="auto internal xref">Section 2.2</a>)</span> acts as the corresponding FEC Repair Packet.<a href="#section-2.1.1-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.13">FEC Source Packet:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.14">
+              <p id="section-2.1.1-2.14.1">The Transfer Segment Message and Transfer End Message act as the corresponding FEC Source Packet.<a href="#section-2.1.1-2.14.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.15">Repair Flow:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.16">
+              <p id="section-2.1.1-2.16.1">The series of Transfer Repair Messages act as the Repair Flow.<a href="#section-2.1.1-2.16.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.17">Repair FEC Payload ID:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.18">
+              <p id="section-2.1.1-2.18.1">See <span><a href="#fec-repair" class="internal xref">Repair FEC Payload ID</a> (<a href="#fec-repair" class="auto internal xref">Section 2.1.3</a>)</span>.<a href="#section-2.1.1-2.18.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.19">Source Flow:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.20">
+              <p id="section-2.1.1-2.20.1">The series of Transfer Segment and Transfer End Messages act as the Source Flow.<a href="#section-2.1.1-2.20.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.21">Source FEC Payload ID:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.22">
+              <p id="section-2.1.1-2.22.1">The combination of FEC Instance ID, Transfer Number, and Segment Sequence Number provide suitable Source FEC Payload ID.<a href="#section-2.1.1-2.22.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-2.1.1-2.23">Transport Protocol:</dt>
+            <dd style="margin-left: 1.5em" id="section-2.1.1-2.24">
+              <p id="section-2.1.1-2.24.1">The underlying link-layer protocol.<a href="#section-2.1.1-2.24.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+<p id="section-2.1.1-3">Other definitions in RFC 6363 remain as defined in that document.<a href="#section-2.1.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="fec-instance-id">
+<section id="section-2.1.2">
+          <h4 id="name-fec-instance-id">
+<a href="#section-2.1.2" class="section-number selfRef">2.1.2. </a><a href="#name-fec-instance-id" class="section-name selfRef">FEC Instance ID</a>
+          </h4>
+<p id="section-2.1.2-1">TODO - Stuff!<a href="#section-2.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="fec-repair">
+<section id="section-2.1.3">
+          <h4 id="name-repair-fec-payload-id">
+<a href="#section-2.1.3" class="section-number selfRef">2.1.3. </a><a href="#name-repair-fec-payload-id" class="section-name selfRef">Repair FEC Payload ID</a>
+          </h4>
+<p id="section-2.1.3-1">The combination of FEC Instance ID and Transfer Number provide a part of the Repair FEC Payload ID, but additional information is expected to be required in Transfer Repair Messages, depending on the FEC scheme in use.<a href="#section-2.1.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="transfer-repair-message">
+<section id="section-2.2">
+        <h3 id="name-transfer-repair-message">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-transfer-repair-message" class="section-name selfRef">Transfer Repair Message</a>
+        </h3>
+<p id="section-2.2-1">The Transfer Repair Message is used to carry repair information when Forward Error Correction is in use, see <a href="#fec" class="auto internal xref">Section 2.1</a>.  This message corresponds to the "Repair Packet" in <span><a href="https://rfc-editor.org/rfc/rfc6363#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">A Transfer Repair Message has a type of TBD. The Message Content field is formatted as follows:<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.2-3">
+<pre>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Transfer Number                               | FEC Inst. ID  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                ... Repair FEC Payload ID ...                  :
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                 ... Segment Repair Data ...                   :
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre><a href="#section-2.2-3" class="pilcrow">¶</a>
+</div>
+<span class="break"></span><dl class="dlParallel" id="section-2.2-4">
+          <dt id="section-2.2-4.1">Transfer Number:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.2-4.2">
+            <p id="section-2.2-4.2.1">The numeric identifier of the in-progress Transfer that this Segment is part of, encoded as a 24-bit unsigned integer in network byte order.<a href="#section-2.2-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.2-4.3">FEC Instance ID:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.2-4.4">
+            <p id="section-2.2-4.4.1">The identifier of the FEC scheme and parameters in use for this Transfer, see <span><a href="#fec" class="internal xref">Forward Error Correction</a> (<a href="#fec" class="auto internal xref">Section 2.1</a>)</span>.<a href="#section-2.2-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.2-4.5">Repair FEC Payload ID:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.2-4.6">
+            <p id="section-2.2-4.6.1">See <span><a href="#fec-repair" class="internal xref">Repair FEC Payload ID</a> (<a href="#fec-repair" class="auto internal xref">Section 2.1.3</a>)</span>.<a href="#section-2.2-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.2-4.7">Segment Repair Data:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.2-4.8">
+            <p id="section-2.2-4.8.1">The octets of the repair data for a Segment of the Transfer, with the length calculated as the Message content length excluding the 12 octets of the Transfer Number, FEC Instance, Segment Sequence Number, and Segment Data Length.<a href="#section-2.2-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-2.2-5">Transfer Repair Messages <span class="bcp14">SHOULD NOT</span> have zero octets of Segment Repair Data, i.e. the total length of the Message <span class="bcp14">SHOULD</span> be greater than 16 octets.  Such Messages only add control-plane overhead and <span class="bcp14">SHOULD NOT</span> be used as an alternative form of padding.<a href="#section-2.2-5" class="pilcrow">¶</a></p>
+<p id="section-2.2-6">Transfer Repair Messages With FEC Instance ID zero (0) are not valid.  They <span class="bcp14">SHOULD NOT</span> be emitted by a sender and <span class="bcp14">MUST</span> be ignored by a receiver.<a href="#section-2.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
@@ -1216,6 +1381,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC6363">[RFC6363]</dt>
+      <dd>
+<span class="refAuthor">Watson, M.</span>, <span class="refAuthor">Begen, A.</span>, and <span class="refAuthor">V. Roca</span>, <span class="refTitle">"Forward Error Correction (FEC) Framework"</span>, <span class="seriesInfo">RFC 6363</span>, <span class="seriesInfo">DOI 10.17487/RFC6363</span>, <time datetime="2011-10" class="refDate">October 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6363">https://www.rfc-editor.org/rfc/rfc6363</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
     <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
@@ -1226,7 +1395,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <div id="acknowledgments">
 <section id="appendix-A">
       <h2 id="name-acknowledgments">
-<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
 <p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
@@ -1237,11 +1406,11 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Your Name Here</span></div>
-<div dir="auto" class="left"><span class="org">Your Organization Here</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Rick Taylor</span></div>
+<div dir="auto" class="left"><span class="org">Aalyria Technologies</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:your.email@example.com" class="email">your.email@example.com</a>
+<a href="mailto:rtaylor@aalyria.com" class="email">rtaylor@aalyria.com</a>
 </div>
 </address>
 </section>
