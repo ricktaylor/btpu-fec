@@ -84,7 +84,7 @@ FEC Repair Packet:
 : The [Transfer Repair Message](#transfer-repair-message) acts as the corresponding FEC Repair Packet.
 
 FEC Source Packet:
-: The [Transfer Segment Message](#transfer-segment-message) and [Transfer End Message](#transfer-end-message) act as the corresponding FEC Source Packet.
+: The Transfer Segment Message and Transfer End Message act as the corresponding FEC Source Packet.
 
 Repair Flow:
 : The series of Transfer Repair Messages act as the Repair Flow.
@@ -128,7 +128,7 @@ A Transfer Repair Message has a type of TBD. The Message Content field is format
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 Transfer Number:
-: The numeric identifier of the [in-progress](#transfer-window) Transfer that this Segment is part of, encoded as a 24-bit unsigned integer in network byte order.
+: The numeric identifier of the in-progress Transfer that this Segment is part of, encoded as a 24-bit unsigned integer in network byte order.
 
 FEC Instance ID:
 : The identifier of the FEC scheme and parameters in use for this Transfer, see [Forward Error Correction](#fec).
