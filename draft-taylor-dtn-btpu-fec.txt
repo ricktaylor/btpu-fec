@@ -4,8 +4,8 @@
 
 Delay/Disruption Tolerant Networking                           R. Taylor
 Internet-Draft                                      Aalyria Technologies
-Intended status: Standards Track                           11 March 2025
-Expires: 12 September 2025
+Intended status: Standards Track                           13 March 2025
+Expires: 14 September 2025
 
 
        Forward Error Correction for the Bundle Transfer Protocol
@@ -13,10 +13,10 @@ Expires: 12 September 2025
 
 Abstract
 
-   This document defines an extension to the Bundle Transfer Protocol -
-   Unidirectional, as described in [BTPU], to enable forward error
-   correction (FEC) coding to be applied selectively to the transfer of
-   individual bundles on a case by case basis.
+   This document defines an optional extension to the Bundle Transfer
+   Protocol - Unidirectional, as described in [BTPU], to enable forward
+   error correction (FEC) coding to be applied selectively to the
+   transfer of individual bundles on a case by case basis.
 
    The definition and use of FEC follows the FECFRAME framework defined
    in [RFC6363], and this document introduces new Message types to BTPU
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 September 2025.
+   This Internet-Draft will expire on 14 September 2025.
 
 Copyright Notice
 
@@ -73,19 +73,20 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
+     1.1.  Applicability
    2.  Conventions and Definitions
-     2.1.  Mapping to RFC 6363
-       2.1.1.  FEC Instance ID
-   3.  Message Definitions
-     3.1.  Pre-agreed FEC Source Message
-     3.2.  Explicit FEC Source Message
-     3.3.  Pre-agreed FEC Repair Message
-     3.4.  Explicit FEC Repair Message
-   4.  Security Considerations
-   5.  IANA Considerations
-   6.  References
-     6.1.  Normative References
-     6.2.  Informative References
+   3.  Protocol Overview
+     3.1.  Pre-agreed FEC Instance ID
+   4.  Message Definitions
+     4.1.  Pre-agreed FEC Source Message
+     4.2.  Explicit FEC Source Message
+     4.3.  Pre-agreed FEC Repair Message
+     4.4.  Explicit FEC Repair Message
+   5.  Security Considerations
+   6.  IANA Considerations
+   7.  References
+     7.1.  Normative References
+     7.2.  Informative References
    Appendix A.  Acknowledgments
    Author's Address
 
@@ -102,6 +103,31 @@ Table of Contents
    primitives and best practices of the FECFRAME framework, defined in
    [RFC6363].
 
+   Just as in core BTPU, a Bundle is split in a series of octet
+   sequences that are emitted into frames by the sender to be
+   transported to receivers by the underlying link-layer protocol; but
+   when FEC is desired, the mechanisms defined in the FECFRAME framework
+   are used to produce a sequence of Source Blocks and Repair Symbols
+   that are placed into new Messages, rather than just sub-slices of the
+   original Bundle.  The new Messages are used to distinguish FEC Source
+   Blocks and FEC Repair Symbols from core BTPU Segments.
+
+   Although the content and processing of the new Messages differs from
+   existing BTPU Messages, the rules around the emission and replication
+   of the Messages are identical to the rules applicable to the core
+   BTPU Segment Messages, and they follow the common BTPU Message
+   format, allowing implementations that do not support this extension
+   to efficiently detect and ignore the new Messages.
+
+1.1.  Applicability
+
+   It should be noted that when FEC is available at the link-layer it is
+   generally more effective than applying it at the Transfer layer, and
+   should probably be used when it is available.  This extension is
+   designed to provide FEC capabilities when the underlying link-layer
+   protocol does not have native support for FEC, or when per-Transfer
+   FEC is desired by a deployment.
+
 2.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -110,49 +136,44 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.1.  Mapping to RFC 6363
+3.  Protocol Overview
 
-   This document follows the framework defined in [RFC6363], mapping the
-   concepts defined in Section 2 of [RFC6363] to this document in the
-   following manner:
+   Rather than updating the Segment Messages defined in BTPU, this
+   extension introduces two new pairs of Messages to carry the source
+   and repair symbols of a BTPU Bundle protected with FEC.  The use of
+   new types allows a deployment to select the use of FEC as appropriate
+   on a per-transfer basis, perhaps associated with some upper layer
+   concept of reliability for a particular transfer, or change in
+   transmission environment.  In the language of Section 2 of [RFC6363],
+   the FEC Source Messages act as FEC Source Packets, and the FEC Repair
+   Messages as FEC Repair Packets.  Within the context of a particular
+   Transfer, the sequence of FEC Source Messages are considered the
+   Source Flow, and the sequence of FEC Repair Messages the Repair Flow.
 
-    +=============+==================================================+
-    | FECFRAME    | BTPU Definition                                  |
-    | Definition  |                                                  |
-    +=============+==================================================+
-    | Application | Bundle                                           |
-    | Data Unit   |                                                  |
-    | (ADU)       |                                                  |
-    +-------------+--------------------------------------------------+
-    | ADU Flow    | This document considers all communication        |
-    |             | between a sender and receivers as a single ADU   |
-    |             | Flow, as the underlying BTPU link-layer protocol |
-    |             | is expected to provide a single logical channel  |
-    +-------------+--------------------------------------------------+
-    | Application | BTPU                                             |
-    | Protocol    |                                                  |
-    +-------------+--------------------------------------------------+
-    | FEC Repair  | The Pre-agreed FEC Repair Message (Section 3.3)  |
-    | Packet      | and Explicit FEC Repair Message (Section 3.4)    |
-    |             | act as the corresponding FEC Repair Packet       |
-    +-------------+--------------------------------------------------+
-    | FEC Source  | The Pre-agreed FEC Source Message (Section 3.1)  |
-    | Packet      | and Explicit FEC Source Message (Section 3.2)    |
-    |             | act as the corresponding FEC Source Packet       |
-    +-------------+--------------------------------------------------+
-    | Repair Flow | The series of Transfer Repair Messages act as    |
-    |             | the Repair Flow                                  |
-    +-------------+--------------------------------------------------+
-    | Source Flow | The series of Transfer Segment and Transfer End  |
-    |             | Messages act as the Source Flow                  |
-    +-------------+--------------------------------------------------+
-    | Transport   | The underlying BTPU link-layer protocol          |
-    | Protocol    |                                                  |
-    +-------------+--------------------------------------------------+
+   The source and repair Messages are grouped into two pairs:
 
-                                 Table 1
+   Pre-agreed FEC:  The Pre-agreed FEC Source (Section 4.1) and
+      Pre-agreed FEC Repair (Section 4.3) Messages provide a wire-
+      efficient format, for use when the FEC Framework Configuration
+      Information Section 5.5 of [RFC6363] has been pre-agreed via some
+      a-priori configuration or out-of-band mechanism.
 
-2.1.1.  FEC Instance ID
+   Explicit FEC:  The Explicit FEC Source (Section 4.2) and Explicit FEC
+      Repair (Section 4.4) Messages include the FEC-Scheme-Specific
+      Information (FSSI) in the Message content, allowing for the ad-hoc
+      use of different FEC schemes and configuration, given underlying
+      implementation support.
+
+   Irrespective of whether Pre-agreed or Explicit FEC is in use for a
+   Transfer, the FEC Framework Configuration Information MUST NOT change
+   mid-transfer.  If a receiver detects a change in FEC Framework
+   Configuration Information during a Transfer, it MUST consider any
+   incomplete Transfer affected by the change as cancelled, and ignore
+   all future Messages associated with the Transfer.
+
+3.1.  Pre-agreed FEC Instance ID
+
+   TODO - Stuff!
 
    Every Transfer Message includes an unsigned 8-bit FEC Instance ID
    field.  The value of this field indicates the FEC scheme and
@@ -168,9 +189,7 @@ Table of Contents
    during a Transfer, it MUST consider the Transfer cancelled, and
    ignore all future Messages associated with the Transfer.
 
-   TODO - Stuff!
-
-3.  Message Definitions
+4.  Message Definitions
 
    All new Messages introduced in this document follow the common
    message format as defined in Section 4 of [BTPU].
@@ -179,14 +198,14 @@ Table of Contents
    [RFC6363] by placing the Explicit Source FEC Payload ID before the
    Source Data, as BTPU has no capability analogous to common header
    compression, as found in Robust Header Compression (ROHC) [RFC3095],
-   and hence for consistency with other BTPU messages, the metadata
-   precedes the data.
+   and therefore to maintain consistency with other BTPU messages, the
+   metadata precedes the data.
 
-3.1.  Pre-agreed FEC Source Message
+4.1.  Pre-agreed FEC Source Message
 
-   The Pre-agreed FEC Source Message is used to encapsulate a source
-   block of a Bundle Transfer that uses FEC with a pre-agreed
-   configuration.
+   The Pre-agreed FEC Source Message is used to encapsulate a Source
+   Block (Section 2 of [RFC6363]) of a Bundle Transfer that uses FEC
+   with a pre-agreed configuration.
 
    A Pre-agreed FEC Source Message has a type of TBD1.  The Message
    Content field is formatted as follows:
@@ -217,11 +236,11 @@ Table of Contents
       the length of the Transfer Number, FEC Instance ID, and Explicit
       Source FEC Payload ID.
 
-3.2.  Explicit FEC Source Message
+4.2.  Explicit FEC Source Message
 
-   The Explicit FEC Source Message is used to encapsulate a source block
-   of a Bundle Transfer that uses FEC with an explicit FEC scheme and
-   configuration.
+   The Explicit FEC Source Message is used to encapsulate a Source Block
+   (Section 2 of [RFC6363]) of a Bundle Transfer that uses FEC with an
+   explicit FEC scheme and configuration.
 
    A Explicit FEC Source Message has a type of TBD2.  The Message
    Content field is formatted as follows:
@@ -258,11 +277,11 @@ Table of Contents
       the length of the Transfer Number, FEC Encoding ID, FEC-Scheme-
       Specific Information elements, and Explicit Source FEC Payload ID.
 
-3.3.  Pre-agreed FEC Repair Message
+4.3.  Pre-agreed FEC Repair Message
 
-   The Pre-agreed FEC Repair Message is used to encapsulate the repair
-   symbols of a Bundle Transfer that uses FEC with a pre-agreed
-   configuration.
+   The Pre-agreed FEC Repair Message is used to encapsulate the Repair
+   Symbols (Section 2 of [RFC6363]) of a Bundle Transfer that uses FEC
+   with a pre-agreed configuration.
 
    A Pre-agreed FEC Repair Message has a type of TBD3.  The Message
    Content field is formatted as follows:
@@ -293,11 +312,11 @@ Table of Contents
       excluding the length of the Transfer Number, FEC Instance ID, and
       Repair FEC Payload ID.
 
-3.4.  Explicit FEC Repair Message
+4.4.  Explicit FEC Repair Message
 
-   The Explicit FEC Repair Message is used to encapsulate the repair
-   symbols of a Bundle Transfer that uses FEC with an explicit FEC
-   scheme and configuration.
+   The Explicit FEC Repair Message is used to encapsulate the Repair
+   Symbols (Section 2 of [RFC6363]) of a Bundle Transfer that uses FEC
+   with an explicit FEC scheme and configuration.
 
    A Explicit FEC Repair Message has a type of TBD4.  The Message
    Content field is formatted as follows:
@@ -334,21 +353,25 @@ Table of Contents
       excluding the length of the Transfer Number, FEC Instance ID, and
       Repair FEC Payload ID.
 
-4.  Security Considerations
+5.  Security Considerations
 
-   TODO Security
+   This new Messages and mechanisms in this document do not add
+   additional security considerations, nor impact the security
+   considerations outlined in [BTPU] and [RFC6363].
 
-5.  IANA Considerations
+6.  IANA Considerations
 
-   This document has no IANA actions.
+   IANA is requested to assign new values from the "BTPU Message Types"
+   registry for the new Message types defined in this document: TBD1,
+   TBD2, TBD3, TBD4.
 
-6.  References
+7.  References
 
-6.1.  Normative References
+7.1.  Normative References
 
    [BTPU]     "Bundle Transfer Protocol - Unidirectional", February
-              2025, <https://www.ietf.org/archive/id/draft-taylor-dtn-
-              btpu-00.html>.
+              2025,
+              <https://datatracker.ietf.org/doc/draft-taylor-dtn-btpu>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -364,7 +387,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-6.2.  Informative References
+7.2.  Informative References
 
    [RFC3095]  Bormann, C., Burmeister, C., Degermark, M., Fukushima, H.,
               Hannu, H., Jonsson, L., Hakenberg, R., Koren, T., Le, K.,
@@ -376,7 +399,10 @@ Table of Contents
 
 Appendix A.  Acknowledgments
 
-   TODO acknowledge.
+   The author is indebted to the authors of the FECFRAME framework, and
+   hopes that its successful application in areas outside RTP validates
+   all the obvious hard work that went into making RFC6363 generic and
+   reusable.
 
 Author's Address
 
