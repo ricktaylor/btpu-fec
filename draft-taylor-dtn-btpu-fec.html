@@ -1053,7 +1053,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Taylor</td>
-<td class="center">Expires 14 September 2025</td>
+<td class="center">Expires 17 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-taylor-dtn-btpu-fec-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-13" class="published">13 March 2025</time>
+<time datetime="2025-03-16" class="published">16 March 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-14">14 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-09-17">17 September 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1219,9 +1219,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">There are a number of use-cases of the Bundle Transfer Protocol - Unidirectional <span>[<a href="#BTPU" class="cite xref">BTPU</a>]</span>, where the use of transfer segment repetition as a mechanism to protect against the loss of frames can be considered sub-optimal.  This document describes an alternate mechanism based on forward error correction (FEC) coding, that requires increased computational complexity but fewer transmitted bits.  Rather than defining novel formats and registries for the variety of standardized FEC mechanisms, this document reuses the primitives and best practices of the FECFRAME framework, defined in <span>[<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Just as in core BTPU, a Bundle is split in a series of octet sequences that are emitted into frames by the sender to be transported to receivers by the underlying link-layer protocol; but when FEC is desired, the mechanisms defined in the FECFRAME framework are used to produce a sequence of Source Blocks and Repair Symbols that are placed into new Messages, rather than just sub-slices of the original Bundle.  The new Messages are used to distinguish FEC Source Blocks and FEC Repair Symbols from core BTPU Segments.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">Although the content and processing of the new Messages differs from existing BTPU Messages, the rules around the emission and replication of the Messages are identical to the rules applicable to the core BTPU Segment Messages, and they follow the common BTPU Message format, allowing implementations that do not support this extension to efficiently detect and ignore the new Messages.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-1">There are a number of use-cases of the Bundle Transfer Protocol - Unidirectional <span>[<a href="#BTPU" class="cite xref">BTPU</a>]</span>, where the use of transfer segment repetition as a mechanism to protect against the loss of frames can be considered sub-optimal.  This document describes an alternate mechanism based on forward error correction (FEC) coding, that requires increased computational complexity but fewer transmitted bits.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Rather than defining novel formats and registries for the variety of standardized FEC mechanisms, this document reuses the primitives and best practices of the FECFRAME framework, defined in <span>[<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">Just as in core BTPU, a Bundle is split in a series of octet sequences that are emitted into Messages by the sender to be transported to receivers by the underlying link-layer protocol; but when FEC is desired, the mechanisms defined in the FECFRAME framework are used to produce a sequence of Source Blocks and Repair Symbols that are placed into new Messages, rather than just sub-slices of the original Bundle.  The new Messages are used to distinguish FEC Source Blocks and FEC Repair Symbols from core BTPU Segments.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">Although the content and processing of the new Messages differs from existing BTPU Messages, the rules around the emission and replication of the Messages are identical to the rules applicable to the core BTPU Segment Messages, and they follow the common BTPU Message format, allowing implementations that do not support this extension to efficiently detect and ignore the new Messages.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="applicability">
 <section id="section-1.1">
         <h3 id="name-applicability">
@@ -1248,29 +1249,30 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-protocol-overview">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-protocol-overview" class="section-name selfRef">Protocol Overview</a>
       </h2>
-<p id="section-3-1">Rather than updating the Segment Messages defined in BTPU, this extension introduces two new pairs of Messages to carry the source and repair symbols of a BTPU Bundle protected with FEC.  The use of new types allows a deployment to select the use of FEC as appropriate on a per-transfer basis, perhaps associated with some upper layer concept of reliability for a particular transfer, or change in transmission environment.  In the language of <span><a href="https://rfc-editor.org/rfc/rfc6363#section-2" class="relref">Section 2</a> of [<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>, the FEC Source Messages act as FEC Source Packets, and the FEC Repair Messages as FEC Repair Packets.  Within the context of a particular Transfer, the sequence of FEC Source Messages are considered the Source Flow, and the sequence of FEC Repair Messages the Repair Flow.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">The source and repair Messages are grouped into two pairs:<a href="#section-3-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-3-3">
-        <dt id="section-3-3.1">Pre-agreed FEC:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.2">
-          <p id="section-3-3.2.1">The <span><a href="#pre-agreed-source" class="internal xref">Pre-agreed FEC Source</a> (<a href="#pre-agreed-source" class="auto internal xref">Section 4.1</a>)</span> and <span><a href="#pre-agreed-repair" class="internal xref">Pre-agreed FEC Repair</a> (<a href="#pre-agreed-repair" class="auto internal xref">Section 4.3</a>)</span> Messages provide a wire-efficient format, for use when the FEC Framework Configuration Information <span><a href="https://rfc-editor.org/rfc/rfc6363#section-5.5" class="relref">Section 5.5</a> of [<a href="#RFC6363" class="cite xref">RFC6363</a>]</span> has been pre-agreed via some a-priori configuration or out-of-band mechanism.<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Rather than updating the Segment Messages defined in BTPU, this extension introduces two new pairs of Messages to carry the source and repair symbols of a BTPU Bundle protected with FEC.  The use of new types allows a deployment to select the use of FEC as appropriate on a per-transfer basis, perhaps associated with some upper layer concept of reliability for a particular transfer, or change in transmission environment.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">In the language of <span><a href="https://rfc-editor.org/rfc/rfc6363#section-2" class="relref">Section 2</a> of [<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>, the FEC Source Messages act as FEC Source Packets, and the FEC Repair Messages as FEC Repair Packets.  Within the context of a particular Transfer, the sequence of FEC Source Messages are considered the Source Flow, and the sequence of FEC Repair Messages the Repair Flow.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">The source and repair Messages are grouped into two pairs:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3-4">
+        <dt id="section-3-4.1">Pre-agreed FEC:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.2">
+          <p id="section-3-4.2.1">The <span><a href="#pre-agreed-source" class="internal xref">Pre-agreed FEC Source</a> (<a href="#pre-agreed-source" class="auto internal xref">Section 4.1</a>)</span> and <span><a href="#pre-agreed-repair" class="internal xref">Pre-agreed FEC Repair</a> (<a href="#pre-agreed-repair" class="auto internal xref">Section 4.3</a>)</span> Messages provide a wire-efficient format, for use when the FEC Framework Configuration Information <span><a href="https://rfc-editor.org/rfc/rfc6363#section-5.5" class="relref">Section 5.5</a> of [<a href="#RFC6363" class="cite xref">RFC6363</a>]</span> has been pre-agreed via some a-priori configuration or out-of-band mechanism.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-3.3">Explicit FEC:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-3.4">
-          <p id="section-3-3.4.1">The <span><a href="#explicit-source" class="internal xref">Explicit FEC Source</a> (<a href="#explicit-source" class="auto internal xref">Section 4.2</a>)</span> and <span><a href="#explicit-repair" class="internal xref">Explicit FEC Repair</a> (<a href="#explicit-repair" class="auto internal xref">Section 4.4</a>)</span> Messages include the FEC-Scheme-Specific Information (FSSI) in the Message content, allowing for the ad-hoc use of different FEC schemes and configuration, given underlying implementation support.<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
+<dt id="section-3-4.3">Explicit FEC:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.4">
+          <p id="section-3-4.4.1">The <span><a href="#explicit-source" class="internal xref">Explicit FEC Source</a> (<a href="#explicit-source" class="auto internal xref">Section 4.2</a>)</span> and <span><a href="#explicit-repair" class="internal xref">Explicit FEC Repair</a> (<a href="#explicit-repair" class="auto internal xref">Section 4.4</a>)</span> Messages include the FEC-Scheme-Specific Information (FSSI) in the Message content, allowing for the ad-hoc use of different FEC schemes and configuration, given underlying implementation support.<a href="#section-3-4.4.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-3-4">Irrespective of whether Pre-agreed or Explicit FEC is in use for a Transfer, the FEC Framework Configuration Information <span class="bcp14">MUST NOT</span> change mid-transfer.  If a receiver detects a change in FEC Framework Configuration Information during a Transfer, it <span class="bcp14">MUST</span> consider any incomplete Transfer affected by the change as cancelled, and ignore all future Messages associated with the Transfer.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<div id="pre-agreed-fec-instance-id">
+<p id="section-3-5">Irrespective of whether Pre-agreed or Explicit FEC is in use for a Transfer, the FEC Framework Configuration Information <span class="bcp14">MUST NOT</span> change mid-transfer.  If a receiver detects a change in FEC Framework Configuration Information during a Transfer, it <span class="bcp14">MUST</span> consider any incomplete Transfer affected by the change as cancelled, and ignore all future Messages associated with the Transfer.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<div id="instance-id">
 <section id="section-3.1">
         <h3 id="name-pre-agreed-fec-instance-id">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-pre-agreed-fec-instance-id" class="section-name selfRef">Pre-agreed FEC Instance ID</a>
         </h3>
-<p id="section-3.1-1">TODO - Stuff!<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">Every Transfer Message includes an unsigned 8-bit FEC Instance ID field.  The value of this field indicates the FEC scheme and parameters to be used to recover missing parts of the Bundle, and the mapping from FEC Instance ID to the associated scheme and parameters <span class="bcp14">MUST</span> be pre-agreed at both sender and receiver using an out of band mechanism.  FEC Instance ID zero (0) indicates that no FEC mechanism is in use for the Transfer.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">The FEC Instance ID <span class="bcp14">MUST</span> be the same for all Messages concerned with an individual Transfer, i.e. the FEC scheme in use <span class="bcp14">MUST NOT</span> change mid-transfer.  If a receiver detects a change in FEC Instance ID during a Transfer, it <span class="bcp14">MUST</span> consider the Transfer cancelled, and ignore all future Messages associated with the Transfer.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">When pre-agreed FEC is desired, a lookup table <span class="bcp14">MUST</span> be configured at the sender and all receivers that maps a unique identifier, the FEC Instance ID, to a particular FEC scheme and corresponding FSSI, such that each <span><a href="#pre-agreed-source" class="internal xref">Pre-agreed FEC Source</a> (<a href="#pre-agreed-source" class="auto internal xref">Section 4.1</a>)</span> and <span><a href="#pre-agreed-repair" class="internal xref">Pre-agreed FEC Repair</a> (<a href="#pre-agreed-repair" class="auto internal xref">Section 4.3</a>)</span> Message can refer to the FEC mechanism in use by referencing the FEC Instance ID, rather than including all the FEC configuration information in each Message.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The FEC Instance ID is an unsigned integer in the range 0..255 inclusive, and is carried in the respective FEC Messages encoded in the FEC Instance ID field.  Just like the FEC scheme and configuration, the FEC Instance ID <span class="bcp14">MUST</span> be the same for all Messages concerned with an individual Transfer.  If a receiver detects a change in FEC Instance ID during a Transfer, it <span class="bcp14">MUST</span> consider the Transfer cancelled, and ignore all future Messages associated with the Transfer.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">Configuration of the mapping of FEC Instance ID to FEC scheme information <span class="bcp14">MUST</span> be performed out-of-band, or via a-priori configuration mechanism.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1310,7 +1312,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <dd class="break"></dd>
 <dt id="section-4.1-4.3">FEC Instance ID:</dt>
           <dd style="margin-left: 1.5em" id="section-4.1-4.4">
-            <p id="section-4.1-4.4.1">The identifier of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.<a href="#section-4.1-4.4.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-4.4.1">The <span><a href="#instance-id" class="internal xref">FEC Instance ID</a> (<a href="#instance-id" class="auto internal xref">Section 3.1</a>)</span> of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.<a href="#section-4.1-4.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.1-4.5">Explicit Source FEC Payload ID:</dt>
@@ -1405,7 +1407,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <dd class="break"></dd>
 <dt id="section-4.3-4.3">FEC Instance ID:</dt>
           <dd style="margin-left: 1.5em" id="section-4.3-4.4">
-            <p id="section-4.3-4.4.1">The identifier of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.<a href="#section-4.3-4.4.1" class="pilcrow">¶</a></p>
+            <p id="section-4.3-4.4.1">The <span><a href="#instance-id" class="internal xref">FEC Instance ID</a> (<a href="#instance-id" class="auto internal xref">Section 3.1</a>)</span> of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.<a href="#section-4.3-4.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.3-4.5">Repair FEC Payload ID:</dt>
@@ -1479,7 +1481,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-security-considerations">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-5-1">This new Messages and mechanisms in this document do not add additional security considerations, nor impact the security considerations outlined in <span>[<a href="#BTPU" class="cite xref">BTPU</a>]</span> and <span>[<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">This new Messages and mechanisms in this document do not add additional security considerations, nor impact the existing security considerations outlined in <span>[<a href="#BTPU" class="cite xref">BTPU</a>]</span> and <span>[<a href="#RFC6363" class="cite xref">RFC6363</a>]</span>.<a href="#section-5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
