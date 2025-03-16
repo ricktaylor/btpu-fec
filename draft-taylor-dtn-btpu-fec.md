@@ -53,9 +53,11 @@ The definition and use of FEC follows the FECFRAME framework defined in {{!RFC63
 
 # Introduction
 
-There are a number of use-cases of the Bundle Transfer Protocol - Unidirectional {{BTPU}}, where the use of transfer segment repetition as a mechanism to protect against the loss of frames can be considered sub-optimal.  This document describes an alternate mechanism based on forward error correction (FEC) coding, that requires increased computational complexity but fewer transmitted bits.  Rather than defining novel formats and registries for the variety of standardized FEC mechanisms, this document reuses the primitives and best practices of the FECFRAME framework, defined in {{RFC6363}}.
+There are a number of use-cases of the Bundle Transfer Protocol - Unidirectional {{BTPU}}, where the use of transfer segment repetition as a mechanism to protect against the loss of frames can be considered sub-optimal.  This document describes an alternate mechanism based on forward error correction (FEC) coding, that requires increased computational complexity but fewer transmitted bits.
 
-Just as in core BTPU, a Bundle is split in a series of octet sequences that are emitted into frames by the sender to be transported to receivers by the underlying link-layer protocol; but when FEC is desired, the mechanisms defined in the FECFRAME framework are used to produce a sequence of Source Blocks and Repair Symbols that are placed into new Messages, rather than just sub-slices of the original Bundle.  The new Messages are used to distinguish FEC Source Blocks and FEC Repair Symbols from core BTPU Segments.
+Rather than defining novel formats and registries for the variety of standardized FEC mechanisms, this document reuses the primitives and best practices of the FECFRAME framework, defined in {{RFC6363}}.
+
+Just as in core BTPU, a Bundle is split in a series of octet sequences that are emitted into Messages by the sender to be transported to receivers by the underlying link-layer protocol; but when FEC is desired, the mechanisms defined in the FECFRAME framework are used to produce a sequence of Source Blocks and Repair Symbols that are placed into new Messages, rather than just sub-slices of the original Bundle.  The new Messages are used to distinguish FEC Source Blocks and FEC Repair Symbols from core BTPU Segments.
 
 Although the content and processing of the new Messages differs from existing BTPU Messages, the rules around the emission and replication of the Messages are identical to the rules applicable to the core BTPU Segment Messages, and they follow the common BTPU Message format, allowing implementations that do not support this extension to efficiently detect and ignore the new Messages.
 
@@ -69,7 +71,9 @@ It should be noted that when FEC is available at the link-layer it is generally 
 
 # Protocol Overview
 
-Rather than updating the Segment Messages defined in BTPU, this extension introduces two new pairs of Messages to carry the source and repair symbols of a BTPU Bundle protected with FEC.  The use of new types allows a deployment to select the use of FEC as appropriate on a per-transfer basis, perhaps associated with some upper layer concept of reliability for a particular transfer, or change in transmission environment.  In the language of {{Section 2 of RFC6363}}, the FEC Source Messages act as FEC Source Packets, and the FEC Repair Messages as FEC Repair Packets.  Within the context of a particular Transfer, the sequence of FEC Source Messages are considered the Source Flow, and the sequence of FEC Repair Messages the Repair Flow.
+Rather than updating the Segment Messages defined in BTPU, this extension introduces two new pairs of Messages to carry the source and repair symbols of a BTPU Bundle protected with FEC.  The use of new types allows a deployment to select the use of FEC as appropriate on a per-transfer basis, perhaps associated with some upper layer concept of reliability for a particular transfer, or change in transmission environment.
+
+In the language of {{Section 2 of RFC6363}}, the FEC Source Messages act as FEC Source Packets, and the FEC Repair Messages as FEC Repair Packets.  Within the context of a particular Transfer, the sequence of FEC Source Messages are considered the Source Flow, and the sequence of FEC Repair Messages the Repair Flow.
 
 The source and repair Messages are grouped into two pairs:
 
@@ -81,13 +85,13 @@ Explicit FEC:
 
 Irrespective of whether Pre-agreed or Explicit FEC is in use for a Transfer, the FEC Framework Configuration Information MUST NOT change mid-transfer.  If a receiver detects a change in FEC Framework Configuration Information during a Transfer, it MUST consider any incomplete Transfer affected by the change as cancelled, and ignore all future Messages associated with the Transfer.
 
-## Pre-agreed FEC Instance ID
+## Pre-agreed FEC Instance ID  {#instance-id}
 
-TODO - Stuff!
+When pre-agreed FEC is desired, a lookup table MUST be configured at the sender and all receivers that maps a unique identifier, the FEC Instance ID, to a particular FEC scheme and corresponding FSSI, such that each [Pre-agreed FEC Source](#pre-agreed-source) and [Pre-agreed FEC Repair](#pre-agreed-repair) Message can refer to the FEC mechanism in use by referencing the FEC Instance ID, rather than including all the FEC configuration information in each Message.
 
-Every Transfer Message includes an unsigned 8-bit FEC Instance ID field.  The value of this field indicates the FEC scheme and parameters to be used to recover missing parts of the Bundle, and the mapping from FEC Instance ID to the associated scheme and parameters MUST be pre-agreed at both sender and receiver using an out of band mechanism.  FEC Instance ID zero (0) indicates that no FEC mechanism is in use for the Transfer.
+The FEC Instance ID is an unsigned integer in the range 0..255 inclusive, and is carried in the respective FEC Messages encoded in the FEC Instance ID field.  Just like the FEC scheme and configuration, the FEC Instance ID MUST be the same for all Messages concerned with an individual Transfer.  If a receiver detects a change in FEC Instance ID during a Transfer, it MUST consider the Transfer cancelled, and ignore all future Messages associated with the Transfer.
 
-The FEC Instance ID MUST be the same for all Messages concerned with an individual Transfer, i.e. the FEC scheme in use MUST NOT change mid-transfer.  If a receiver detects a change in FEC Instance ID during a Transfer, it MUST consider the Transfer cancelled, and ignore all future Messages associated with the Transfer.
+Configuration of the mapping of FEC Instance ID to FEC scheme information MUST be performed out-of-band, or via a-priori configuration mechanism.
 
 # Message Definitions
 
@@ -115,7 +119,7 @@ Transfer Number:
 : The numeric identifier of the Transfer that this source block is part of, encoded as a 32-bit unsigned integer in network byte order.
 
 FEC Instance ID:
-: The identifier of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.
+: The [FEC Instance ID](#instance-id) of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.
 
 Explicit Source FEC Payload ID:
 : The Explicit Source FEC Payload ID as defined in {{Section 5.3.1 of RFC6363}}.
@@ -176,7 +180,7 @@ Transfer Number:
 : The numeric identifier of the Transfer that this source block is part of, encoded as a 32-bit unsigned integer in network byte order.
 
 FEC Instance ID:
-: The identifier of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.
+: The [FEC Instance ID](#instance-id) of the pre-agreed FEC scheme and configuration in use for the Transfer, encoded as an 8-bit unsigned integer in network byte order.
 
 Repair FEC Payload ID:
 : The Repair FEC Payload ID as defined in {{Section 5.4.1 of RFC6363}}.
@@ -219,7 +223,7 @@ Repair Symbol Data:
 
 # Security Considerations
 
-This new Messages and mechanisms in this document do not add additional security considerations, nor impact the security considerations outlined in {{BTPU}} and {{RFC6363}}.
+This new Messages and mechanisms in this document do not add additional security considerations, nor impact the existing security considerations outlined in {{BTPU}} and {{RFC6363}}.
 
 # IANA Considerations
 
