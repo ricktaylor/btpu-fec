@@ -4,12 +4,12 @@
 
 Delay/Disruption Tolerant Networking                           R. Taylor
 Internet-Draft                                      Aalyria Technologies
-Intended status: Standards Track                           16 March 2025
-Expires: 17 September 2025
+Intended status: Standards Track                            19 June 2025
+Expires: 21 December 2025
 
 
        Forward Error Correction for the Bundle Transfer Protocol
-                    draft-taylor-dtn-btpu-fec-latest
+                     draft-ietf-dtn-btpu-fec-latest
 
 Abstract
 
@@ -27,9 +27,9 @@ About This Document
    This note is to be removed before publishing as an RFC.
 
    The latest revision of this draft can be found at
-   https://ricktaylor.github.io/btpu-fec/draft-taylor-dtn-btpu-fec.html.
+   https://ricktaylor.github.io/btpu-fec/draft-ietf-dtn-btpu-fec.html.
    Status information for this document may be found at
-   https://datatracker.ietf.org/doc/draft-taylor-dtn-btpu-fec/.
+   https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu-fec/.
 
    Discussion of this document takes place on the Delay/Disruption
    Tolerant Networking Working Group mailing list (mailto:dtn@ietf.org),
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 September 2025.
+   This Internet-Draft will expire on 21 December 2025.
 
 Copyright Notice
 
@@ -379,7 +379,7 @@ Table of Contents
 
    [BTPU]     "Bundle Transfer Protocol - Unidirectional", February
               2025,
-              <https://datatracker.ietf.org/doc/draft-taylor-dtn-btpu>.
+              <https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
