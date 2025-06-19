@@ -4,7 +4,7 @@ title: "Forward Error Correction for the Bundle Transfer Protocol"
 abbrev: "BTPU-FEC"
 category: std
 
-docname: draft-taylor-dtn-btpu-fec-latest
+docname: draft-ietf-dtn-btpu-fec-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -19,7 +19,7 @@ venue:
   mail: "dtn@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/dtn/"
   github: "ricktaylor/btpu-fec"
-  latest: "https://ricktaylor.github.io/btpu-fec/draft-taylor-dtn-btpu-fec.html"
+  latest: "https://ricktaylor.github.io/btpu-fec/draft-ietf-dtn-btpu-fec.html"
 
 keyword:
 
@@ -37,7 +37,7 @@ author:
 
 normative:
   BTPU:
-    target: https://datatracker.ietf.org/doc/draft-taylor-dtn-btpu
+    target: https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu
     title: Bundle Transfer Protocol - Unidirectional
     date: 2025-02
 

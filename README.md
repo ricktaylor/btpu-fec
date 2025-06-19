@@ -2,10 +2,10 @@
 
 This is the working area for the individual Internet-Draft, "Forward Error Correction for the Bundle Transfer Protocol".
 
-* [Editor's Copy](https://ricktaylor.github.io/btpu-fec/#go.draft-taylor-dtn-btpu-fec.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-taylor-dtn-btpu-fec)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-taylor-dtn-btpu-fec)
-* [Compare Editor's Copy to Individual Draft](https://ricktaylor.github.io/btpu-fec/#go.draft-taylor-dtn-btpu-fec.diff)
+* [Editor's Copy](https://ricktaylor.github.io/btpu-fec/#go.draft-ietf-dtn-btpu-fec.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu-fec)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ietf-dtn-btpu-fec)
+* [Compare Editor's Copy to Individual Draft](https://ricktaylor.github.io/btpu-fec/#go.draft-ietf-dtn-btpu-fec.diff)
 
 
 ## Contributing
