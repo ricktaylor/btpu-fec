@@ -4,8 +4,8 @@
 
 Delay/Disruption Tolerant Networking                           R. Taylor
 Internet-Draft                                      Aalyria Technologies
-Intended status: Standards Track                            19 June 2025
-Expires: 21 December 2025
+Intended status: Standards Track                        17 February 2026
+Expires: 21 August 2026
 
 
        Forward Error Correction for the Bundle Transfer Protocol
@@ -54,11 +54,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 December 2025.
+   This Internet-Draft will expire on 21 August 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -75,8 +75,10 @@ Table of Contents
    1.  Introduction
      1.1.  Applicability
    2.  Conventions and Definitions
+     2.1.  Terminology
    3.  Protocol Overview
      3.1.  Pre-agreed FEC Instance ID
+     3.2.  FEC Transfer Operation
    4.  Message Definitions
      4.1.  Pre-agreed FEC Source Message
      4.2.  Explicit FEC Source Message
@@ -104,14 +106,15 @@ Table of Contents
    standardized FEC mechanisms, this document reuses the primitives and
    best practices of the FECFRAME framework, defined in [RFC6363].
 
-   Just as in core BTPU, a Bundle is split in a series of octet
+   Just as in core BTPU, a Bundle is split into a series of octet
    sequences that are emitted into Messages by the sender to be
    transported to receivers by the underlying link-layer protocol; but
-   when FEC is desired, the mechanisms defined in the FECFRAME framework
-   are used to produce a sequence of Source Blocks and Repair Symbols
-   that are placed into new Messages, rather than just sub-slices of the
-   original Bundle.  The new Messages are used to distinguish FEC Source
-   Blocks and FEC Repair Symbols from core BTPU Segments.
+   when FEC is desired, the Bundle is divided into FECFRAME Application
+   Data Units (ADUs), and the mechanisms defined in the FECFRAME
+   framework are used to produce Repair Symbols that are placed into new
+   Messages, rather than just sub-slices of the original Bundle.  The
+   new Messages are used to distinguish FEC Source and Repair data from
+   core BTPU Segments.
 
    Although the content and processing of the new Messages differs from
    existing BTPU Messages, the rules around the emission and replication
@@ -122,12 +125,12 @@ Table of Contents
 
 1.1.  Applicability
 
-   It should be noted that when FEC is available at the link-layer it is
-   generally more effective than applying it at the Transfer layer, and
-   should probably be used when it is available.  This extension is
-   designed to provide FEC capabilities when the underlying link-layer
-   protocol does not have native support for FEC, or when per-Transfer
-   FEC is desired by a deployment.
+   Note that when FEC is available at the link-layer it is generally
+   more effective than applying it at the Transfer layer, and ought to
+   be used when it is available.  This extension is designed to provide
+   FEC capabilities when the underlying link-layer protocol does not
+   have native support for FEC, or when per-Transfer FEC is desired by a
+   deployment.
 
 2.  Conventions and Definitions
 
@@ -136,6 +139,15 @@ Table of Contents
    "OPTIONAL" in this document are to be interpreted as described in
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
+
+2.1.  Terminology
+
+   This document uses FEC terminology from [RFC6363].  In particular,
+   the term "Application Data Unit" (ADU) refers to the unit of source
+   data as defined in Section 2 of [RFC6363], not the Application Data
+   Unit defined in [RFC9171].  In the context of this document, an ADU
+   is a chunk of a Bundle that is provided to the FEC scheme for
+   encoding.
 
 3.  Protocol Overview
 
@@ -150,7 +162,7 @@ Table of Contents
    In the language of Section 2 of [RFC6363], the FEC Source Messages
    act as FEC Source Packets, and the FEC Repair Messages as FEC Repair
    Packets.  Within the context of a particular Transfer, the sequence
-   of FEC Source Messages are considered the Source Flow, and the
+   of FEC Source Messages is considered the Source Flow, and the
    sequence of FEC Repair Messages the Repair Flow.
 
    The source and repair Messages are grouped into two pairs:
@@ -159,20 +171,40 @@ Table of Contents
       Pre-agreed FEC Repair (Section 4.3) Messages provide a wire-
       efficient format, for use when the FEC Framework Configuration
       Information Section 5.5 of [RFC6363] has been pre-agreed via some
-      a-priori configuration or out-of-band mechanism.
+      a-priori configuration or out-of-band mechanism.  Each Message
+      carries an 8-bit FEC Instance ID that references pre-configured
+      FEC scheme information.
 
    Explicit FEC:  The Explicit FEC Source (Section 4.2) and Explicit FEC
       Repair (Section 4.4) Messages include the FEC-Scheme-Specific
       Information (FSSI) in the Message content, allowing for the ad-hoc
       use of different FEC schemes and configuration, given underlying
-      implementation support.
+      implementation support.  Each Message carries an 8-bit FEC
+      Encoding ID and the FSSI elements required by the FEC scheme.
+
+   The following table summarizes the differences between the two
+   approaches:
+
+   +================+=========================+=================+
+   | Aspect         | Pre-agreed FEC          | Explicit FEC    |
+   +================+=========================+=================+
+   | Configuration  | Out-of-band or a-priori | Self-describing |
+   +----------------+-------------------------+-----------------+
+   | FEC Identifier | FEC Instance ID (8-bit) | FEC Encoding ID |
+   |                |                         | (8-bit)         |
+   +----------------+-------------------------+-----------------+
+   | Per-Message    | Lower (no FSSI)         | Higher          |
+   | Overhead       |                         | (includes FSSI) |
+   +----------------+-------------------------+-----------------+
+
+         Table 1: Comparison of Pre-agreed and Explicit FEC
 
    Irrespective of whether Pre-agreed or Explicit FEC is in use for a
    Transfer, the FEC Framework Configuration Information MUST NOT change
    mid-transfer.  If a receiver detects a change in FEC Framework
    Configuration Information during a Transfer, it MUST consider any
-   incomplete Transfer affected by the change as cancelled, and ignore
-   all future Messages associated with the Transfer.
+   incomplete Transfer affected by the change as cancelled, as defined
+   in Section 5.4 of [BTPU].
 
 3.1.  Pre-agreed FEC Instance ID
 
@@ -190,17 +222,39 @@ Table of Contents
    configuration, the FEC Instance ID MUST be the same for all Messages
    concerned with an individual Transfer.  If a receiver detects a
    change in FEC Instance ID during a Transfer, it MUST consider the
-   Transfer cancelled, and ignore all future Messages associated with
-   the Transfer.
+   Transfer cancelled, as defined in Section 5.4 of [BTPU].
 
    Configuration of the mapping of FEC Instance ID to FEC scheme
-   information MUST be performed out-of-band, or via a-priori
+   information MUST be performed out-of-band, or via an a-priori
    configuration mechanism.
+
+3.2.  FEC Transfer Operation
+
+   FEC Messages share the same Transfer Number space as the core BTPU
+   Transfer Messages, and the Transfer Window algorithm defined in
+   [BTPU] applies to FEC Transfers.  However, a sender MUST NOT mix FEC
+   Messages and core BTPU Transfer Messages (Transfer Segment or
+   Transfer End) within the same Transfer.  If a receiver detects such
+   mixing, it MUST consider the Transfer cancelled, as defined in
+   Section 5.4 of [BTPU].  The Transfer Cancel Message, as defined in
+   [BTPU], MAY be used to cancel an FEC Transfer.
+
+   Unlike core BTPU, FEC Transfers do not use an explicit Transfer End
+   Message to signal completion.  Instead, the FEC scheme determines
+   when sufficient ADUs and Repair Symbols have been received to
+   reconstruct the original bundle.  The Transfer Window algorithm
+   provides the receiver with an upper bound on how long to wait for FEC
+   Messages associated with a given Transfer before considering it
+   complete or failed.  The Bundle Length Hint, if present, can be used
+   to verify that the reconstructed bundle has the expected size.
 
 4.  Message Definitions
 
    All new Messages introduced in this document follow the common
-   message format as defined in Section 4 of [BTPU].
+   message format as defined in Section 4 of [BTPU], and Hint Items MAY
+   be included in these Messages.  The Bundle Length Hint, as defined in
+   [BTPU], MAY be included in FEC Source and FEC Repair Messages to
+   signal the total length of the bundle being transferred.
 
    This specification deviates from the recommendation in Section 5.3 of
    [RFC6363] by placing the Explicit Source FEC Payload ID before the
@@ -209,11 +263,18 @@ Table of Contents
    and therefore to maintain consistency with other BTPU messages, the
    metadata precedes the data.
 
+   Unlike the Transfer Segment and Transfer End Messages defined in
+   [BTPU], FEC Messages do not include a Segment Index field.  The FEC
+   Payload IDs, as defined by the FEC scheme in use, serve the
+   equivalent role of identifying and ordering source blocks and repair
+   symbols for reassembly.
+
 4.1.  Pre-agreed FEC Source Message
 
-   The Pre-agreed FEC Source Message is used to encapsulate a Source
-   Block (Section 2 of [RFC6363]) of a Bundle Transfer that uses FEC
-   with a pre-agreed configuration.
+   The Pre-agreed FEC Source Message is used to encapsulate an
+   Application Data Unit (ADU), as defined in Section 2 of [RFC6363], of
+   a Bundle Transfer that uses FEC with a pre-agreed configuration.
+   Multiple ADUs together form a Source Block for FEC encoding.
 
    A Pre-agreed FEC Source Message has a type of TBD1.  The Message
    Content field is formatted as follows:
@@ -225,32 +286,34 @@ Table of Contents
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    | FEC Inst. ID  |   Explicit Source FEC Payload ID ...          :
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                  ... Source Block Data ...                    :
+   |                       ... Source Data ...                     :
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Transfer Number:  The numeric identifier of the Transfer that this
-      source block is part of, encoded as a 32-bit unsigned integer in
-      network byte order.
+      ADU is part of, encoded as a 32-bit unsigned integer in network
+      byte order.
 
    FEC Instance ID:  The FEC Instance ID (Section 3.1) of the pre-agreed
       FEC scheme and configuration in use for the Transfer, encoded as
       an 8-bit unsigned integer in network byte order.
 
-   Explicit Source FEC Payload ID:  The Explicit Source FEC Payload ID
-      as defined in Section 5.3.1 of [RFC6363].
+   Explicit Source FEC Payload ID:  The Explicit Source FEC Payload ID,
+      with the format defined by the FEC scheme.  It is RECOMMENDED that
+      FEC schemes support the Generic Explicit Source FEC Payload ID
+      format defined in Section 5.3.1 of [RFC6363].
 
-   Source Block Data:  The octets of the source block of the Transfer,
-      with the length calculated as the Message content length excluding
-      the length of the Transfer Number, FEC Instance ID, and Explicit
-      Source FEC Payload ID.
+   Source Data:  The octets of the ADU, with the length calculated as
+      the Message content length excluding the length of the Transfer
+      Number, FEC Instance ID, and Explicit Source FEC Payload ID.
 
 4.2.  Explicit FEC Source Message
 
-   The Explicit FEC Source Message is used to encapsulate a Source Block
-   (Section 2 of [RFC6363]) of a Bundle Transfer that uses FEC with an
-   explicit FEC scheme and configuration.
+   The Explicit FEC Source Message is used to encapsulate an Application
+   Data Unit (ADU), as defined in Section 2 of [RFC6363], of a Bundle
+   Transfer that uses FEC with an explicit FEC scheme and configuration.
+   Multiple ADUs together form a Source Block for FEC encoding.
 
-   A Explicit FEC Source Message has a type of TBD2.  The Message
+   An Explicit FEC Source Message has a type of TBD2.  The Message
    Content field is formatted as follows:
 
     0                   1                   2                   3
@@ -262,12 +325,12 @@ Table of Contents
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    | Explicit Source FEC Payload ID ...                            :
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                  ... Source Block Data ...                    :
+   |                       ... Source Data ...                     :
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Transfer Number:  The numeric identifier of the Transfer that this
-      source block is part of, encoded as a 32-bit unsigned integer in
-      network byte order.
+      ADU is part of, encoded as a 32-bit unsigned integer in network
+      byte order.
 
    FEC Encoding ID:  A FEC Encoding ID, as defined in Section 5.6 of
       [RFC6363], encoded as an 8-bit unsigned integer in network byte
@@ -275,15 +338,19 @@ Table of Contents
 
    FEC-Scheme-Specific Information elements:  Zero or more FEC-Scheme-
       Specific Information elements as defined in Section 5.5 of
-      [RFC6363].
+      [RFC6363].  The binary encoding format and length of these
+      elements is defined by the FEC scheme identified by the FEC
+      Encoding ID.
 
-   Explicit Source FEC Payload ID:  The Explicit Source FEC Payload ID
-      as defined in Section 5.3.1 of [RFC6363].
+   Explicit Source FEC Payload ID:  The Explicit Source FEC Payload ID,
+      with the format defined by the FEC scheme.  It is RECOMMENDED that
+      FEC schemes support the Generic Explicit Source FEC Payload ID
+      format defined in Section 5.3.1 of [RFC6363].
 
-   Source Block Data:  The octets of the source block of the Transfer,
-      with the length calculated as the Message content length excluding
-      the length of the Transfer Number, FEC Encoding ID, FEC-Scheme-
-      Specific Information elements, and Explicit Source FEC Payload ID.
+   Source Data:  The octets of the ADU, with the length calculated as
+      the Message content length excluding the length of the Transfer
+      Number, FEC Encoding ID, FEC-Scheme-Specific Information elements,
+      and Explicit Source FEC Payload ID.
 
 4.3.  Pre-agreed FEC Repair Message
 
@@ -304,21 +371,22 @@ Table of Contents
    |                  ... Repair Symbol Data ...                   :
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Transfer Number:  The numeric identifier of the Transfer that this
-      source block is part of, encoded as a 32-bit unsigned integer in
-      network byte order.
+   Transfer Number:  The numeric identifier of the Transfer that these
+      repair symbols are part of, encoded as a 32-bit unsigned integer
+      in network byte order.
 
    FEC Instance ID:  The FEC Instance ID (Section 3.1) of the pre-agreed
       FEC scheme and configuration in use for the Transfer, encoded as
       an 8-bit unsigned integer in network byte order.
 
    Repair FEC Payload ID:  The Repair FEC Payload ID as defined in
-      Section 5.4.1 of [RFC6363].
+      Section 5.4 of [RFC6363], with the format specified by the FEC
+      scheme.
 
-   Repair Symbol Data:  The octets of the repair symbols of the
-      Transfer, with the length calculated as the Message content length
-      excluding the length of the Transfer Number, FEC Instance ID, and
-      Repair FEC Payload ID.
+   Repair Symbol Data:  The octets of the repair symbols, with the
+      length calculated as the Message content length excluding the
+      length of the Transfer Number, FEC Instance ID, and Repair FEC
+      Payload ID.
 
 4.4.  Explicit FEC Repair Message
 
@@ -326,7 +394,7 @@ Table of Contents
    Symbols (Section 2 of [RFC6363]) of a Bundle Transfer that uses FEC
    with an explicit FEC scheme and configuration.
 
-   A Explicit FEC Repair Message has a type of TBD4.  The Message
+   An Explicit FEC Repair Message has a type of TBD4.  The Message
    Content field is formatted as follows:
 
     0                   1                   2                   3
@@ -341,9 +409,9 @@ Table of Contents
    |                  ... Repair Symbol Data ...                   :
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Transfer Number:  The numeric identifier of the Transfer that this
-      source block is part of, encoded as a 32-bit unsigned integer in
-      network byte order.
+   Transfer Number:  The numeric identifier of the Transfer that these
+      repair symbols are part of, encoded as a 32-bit unsigned integer
+      in network byte order.
 
    FEC Encoding ID:  A FEC Encoding ID, as defined in Section 5.6 of
       [RFC6363], encoded as an 8-bit unsigned integer in network byte
@@ -351,27 +419,53 @@ Table of Contents
 
    FEC-Scheme-Specific Information elements:  Zero or more FEC-Scheme-
       Specific Information elements as defined in Section 5.5 of
-      [RFC6363].
+      [RFC6363].  The binary encoding format and length of these
+      elements is defined by the FEC scheme identified by the FEC
+      Encoding ID.
 
    Repair FEC Payload ID:  The Repair FEC Payload ID as defined in
-      Section 5.4.1 of [RFC6363].
+      Section 5.4 of [RFC6363], with the format specified by the FEC
+      scheme.
 
-   Repair Symbol Data:  The octets of the repair symbols of the
-      Transfer, with the length calculated as the Message content length
-      excluding the length of the Transfer Number, FEC Instance ID, and
-      Repair FEC Payload ID.
+   Repair Symbol Data:  The octets of the repair symbols, with the
+      length calculated as the Message content length excluding the
+      length of the Transfer Number, FEC Encoding ID, FEC-Scheme-
+      Specific Information elements, and Repair FEC Payload ID.
 
 5.  Security Considerations
 
-   This new Messages and mechanisms in this document do not add
+   The new Messages and mechanisms in this document do not add
    additional security considerations, nor impact the existing security
    considerations outlined in [BTPU] and [RFC6363].
+
+   FEC mechanisms do not provide authentication or integrity protection.
+   Malicious or corrupted FEC Messages could cause a receiver to
+   reconstruct an incorrect bundle.  If a receiver detects an error
+   during FEC decoding, it SHOULD cancel the Transfer as defined in
+   Section 5.4 of [BTPU].  Additionally, deployments SHOULD use upper-
+   layer integrity mechanisms, such as BPSec [RFC9172], to detect
+   corruption in reconstructed bundles.  When upper-layer integrity
+   verification fails, implementations SHOULD discard the reconstructed
+   bundle as per the upper-layer's security policy.
 
 6.  IANA Considerations
 
    IANA is requested to assign new values from the "BTPU Message Types"
-   registry for the new Message types defined in this document: TBD1,
-   TBD2, TBD3, TBD4.
+   registry for the new Message types defined in this document:
+
+   +=======+===============================+
+   | Value | Message Type                  |
+   +=======+===============================+
+   | TBD1  | Pre-agreed FEC Source Message |
+   +-------+-------------------------------+
+   | TBD2  | Explicit FEC Source Message   |
+   +-------+-------------------------------+
+   | TBD3  | Pre-agreed FEC Repair Message |
+   +-------+-------------------------------+
+   | TBD4  | Explicit FEC Repair Message   |
+   +-------+-------------------------------+
+
+        Table 2: New BTPU Message Types
 
 7.  References
 
@@ -379,7 +473,7 @@ Table of Contents
 
    [BTPU]     "Bundle Transfer Protocol - Unidirectional", February
               2025,
-              <https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu>.
+              <https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu/>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -395,6 +489,10 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
+   [RFC9172]  Birrane, III, E. and K. McKeever, "Bundle Protocol
+              Security (BPSec)", RFC 9172, DOI 10.17487/RFC9172, January
+              2022, <https://www.rfc-editor.org/rfc/rfc9172>.
+
 7.2.  Informative References
 
    [RFC3095]  Bormann, C., Burmeister, C., Degermark, M., Fukushima, H.,
@@ -404,6 +502,10 @@ Table of Contents
               Compression (ROHC): Framework and four profiles: RTP, UDP,
               ESP, and uncompressed", RFC 3095, DOI 10.17487/RFC3095,
               July 2001, <https://www.rfc-editor.org/rfc/rfc3095>.
+
+   [RFC9171]  Burleigh, S., Fall, K., and E. Birrane, III, "Bundle
+              Protocol Version 7", RFC 9171, DOI 10.17487/RFC9171,
+              January 2022, <https://www.rfc-editor.org/rfc/rfc9171>.
 
 Appendix A.  Acknowledgments
 
