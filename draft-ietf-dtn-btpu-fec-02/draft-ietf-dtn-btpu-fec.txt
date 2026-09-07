@@ -4,8 +4,8 @@
 
 Delay/Disruption Tolerant Networking                           R. Taylor
 Internet-Draft                                      Aalyria Technologies
-Intended status: Standards Track                        17 February 2026
-Expires: 21 August 2026
+Intended status: Standards Track                        7 September 2026
+Expires: 11 March 2027
 
 
        Forward Error Correction for the Bundle Transfer Protocol
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 August 2026.
+   This Internet-Draft will expire on 11 March 2027.
 
 Copyright Notice
 
@@ -204,7 +204,7 @@ Table of Contents
    mid-transfer.  If a receiver detects a change in FEC Framework
    Configuration Information during a Transfer, it MUST consider any
    incomplete Transfer affected by the change as cancelled, as defined
-   in Section 5.4 of [BTPU].
+   in Section 4.2 of [BTPU].
 
 3.1.  Pre-agreed FEC Instance ID
 
@@ -222,7 +222,7 @@ Table of Contents
    configuration, the FEC Instance ID MUST be the same for all Messages
    concerned with an individual Transfer.  If a receiver detects a
    change in FEC Instance ID during a Transfer, it MUST consider the
-   Transfer cancelled, as defined in Section 5.4 of [BTPU].
+   Transfer cancelled, as defined in Section 4.2 of [BTPU].
 
    Configuration of the mapping of FEC Instance ID to FEC scheme
    information MUST be performed out-of-band, or via an a-priori
@@ -236,7 +236,7 @@ Table of Contents
    Messages and core BTPU Transfer Messages (Transfer Segment or
    Transfer End) within the same Transfer.  If a receiver detects such
    mixing, it MUST consider the Transfer cancelled, as defined in
-   Section 5.4 of [BTPU].  The Transfer Cancel Message, as defined in
+   Section 4.2 of [BTPU].  The Transfer Cancel Message, as defined in
    [BTPU], MAY be used to cancel an FEC Transfer.
 
    Unlike core BTPU, FEC Transfers do not use an explicit Transfer End
@@ -251,7 +251,7 @@ Table of Contents
 4.  Message Definitions
 
    All new Messages introduced in this document follow the common
-   message format as defined in Section 4 of [BTPU], and Hint Items MAY
+   message format as defined in Section 7 of [BTPU], and Hint Items MAY
    be included in these Messages.  The Bundle Length Hint, as defined in
    [BTPU], MAY be included in FEC Source and FEC Repair Messages to
    signal the total length of the bundle being transferred.
@@ -442,7 +442,7 @@ Table of Contents
    Malicious or corrupted FEC Messages could cause a receiver to
    reconstruct an incorrect bundle.  If a receiver detects an error
    during FEC decoding, it SHOULD cancel the Transfer as defined in
-   Section 5.4 of [BTPU].  Additionally, deployments SHOULD use upper-
+   Section 4.2 of [BTPU].  Additionally, deployments SHOULD use upper-
    layer integrity mechanisms, such as BPSec [RFC9172], to detect
    corruption in reconstructed bundles.  When upper-layer integrity
    verification fails, implementations SHOULD discard the reconstructed
@@ -471,9 +471,10 @@ Table of Contents
 
 7.1.  Normative References
 
-   [BTPU]     "Bundle Transfer Protocol - Unidirectional", February
-              2025,
-              <https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu/>.
+   [BTPU]     Taylor, R., "Bundle Transfer Protocol - Unidirectional",
+              Work in Progress, Internet-Draft, draft-ietf-dtn-btpu-03,
+              19 July 2026, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-dtn-btpu-03>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
