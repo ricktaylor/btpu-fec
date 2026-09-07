@@ -36,10 +36,7 @@ author:
   email: rtaylor@aalyria.com
 
 normative:
-  BTPU:
-    target: https://datatracker.ietf.org/doc/draft-ietf-dtn-btpu/
-    title: Bundle Transfer Protocol - Unidirectional
-    date: 2025-02
+  BTPU: I-D.ietf-dtn-btpu
 
 informative:
 
@@ -96,25 +93,25 @@ The following table summarizes the differences between the two approaches:
 | Per-Message Overhead | Lower (no FSSI) | Higher (includes FSSI) |
 {: #tab-fec-comparison align="left" title="Comparison of Pre-agreed and Explicit FEC"}
 
-Irrespective of whether Pre-agreed or Explicit FEC is in use for a Transfer, the FEC Framework Configuration Information MUST NOT change mid-transfer.  If a receiver detects a change in FEC Framework Configuration Information during a Transfer, it MUST consider any incomplete Transfer affected by the change as cancelled, as defined in Section 5.4 of {{BTPU}}.
+Irrespective of whether Pre-agreed or Explicit FEC is in use for a Transfer, the FEC Framework Configuration Information MUST NOT change mid-transfer.  If a receiver detects a change in FEC Framework Configuration Information during a Transfer, it MUST consider any incomplete Transfer affected by the change as cancelled, as defined in {{Section 4.2 of BTPU}}.
 
 ## Pre-agreed FEC Instance ID  {#instance-id}
 
 When pre-agreed FEC is desired, a lookup table MUST be configured at the sender and all receivers that maps a unique identifier, the FEC Instance ID, to a particular FEC scheme and corresponding FSSI, such that each [Pre-agreed FEC Source](#pre-agreed-source) and [Pre-agreed FEC Repair](#pre-agreed-repair) Message can refer to the FEC mechanism in use by referencing the FEC Instance ID, rather than including all the FEC configuration information in each Message.
 
-The FEC Instance ID is an unsigned integer in the range 0..255 inclusive, and is carried in the respective FEC Messages encoded in the FEC Instance ID field.  Just like the FEC scheme and configuration, the FEC Instance ID MUST be the same for all Messages concerned with an individual Transfer.  If a receiver detects a change in FEC Instance ID during a Transfer, it MUST consider the Transfer cancelled, as defined in Section 5.4 of {{BTPU}}.
+The FEC Instance ID is an unsigned integer in the range 0..255 inclusive, and is carried in the respective FEC Messages encoded in the FEC Instance ID field.  Just like the FEC scheme and configuration, the FEC Instance ID MUST be the same for all Messages concerned with an individual Transfer.  If a receiver detects a change in FEC Instance ID during a Transfer, it MUST consider the Transfer cancelled, as defined in {{Section 4.2 of BTPU}}.
 
 Configuration of the mapping of FEC Instance ID to FEC scheme information MUST be performed out-of-band, or via an a-priori configuration mechanism.
 
 ## FEC Transfer Operation
 
-FEC Messages share the same Transfer Number space as the core BTPU Transfer Messages, and the Transfer Window algorithm defined in {{BTPU}} applies to FEC Transfers.  However, a sender MUST NOT mix FEC Messages and core BTPU Transfer Messages (Transfer Segment or Transfer End) within the same Transfer.  If a receiver detects such mixing, it MUST consider the Transfer cancelled, as defined in Section 5.4 of {{BTPU}}.  The Transfer Cancel Message, as defined in {{BTPU}}, MAY be used to cancel an FEC Transfer.
+FEC Messages share the same Transfer Number space as the core BTPU Transfer Messages, and the Transfer Window algorithm defined in {{BTPU}} applies to FEC Transfers.  However, a sender MUST NOT mix FEC Messages and core BTPU Transfer Messages (Transfer Segment or Transfer End) within the same Transfer.  If a receiver detects such mixing, it MUST consider the Transfer cancelled, as defined in {{Section 4.2 of BTPU}}.  The Transfer Cancel Message, as defined in {{BTPU}}, MAY be used to cancel an FEC Transfer.
 
 Unlike core BTPU, FEC Transfers do not use an explicit Transfer End Message to signal completion.  Instead, the FEC scheme determines when sufficient ADUs and Repair Symbols have been received to reconstruct the original bundle.  The Transfer Window algorithm provides the receiver with an upper bound on how long to wait for FEC Messages associated with a given Transfer before considering it complete or failed.  The Bundle Length Hint, if present, can be used to verify that the reconstructed bundle has the expected size.
 
 # Message Definitions
 
-All new Messages introduced in this document follow the common message format as defined in Section 4 of {{BTPU}}, and Hint Items MAY be included in these Messages.  The Bundle Length Hint, as defined in {{BTPU}}, MAY be included in FEC Source and FEC Repair Messages to signal the total length of the bundle being transferred.
+All new Messages introduced in this document follow the common message format as defined in {{Section 7 of BTPU}}, and Hint Items MAY be included in these Messages.  The Bundle Length Hint, as defined in {{BTPU}}, MAY be included in FEC Source and FEC Repair Messages to signal the total length of the bundle being transferred.
 
 This specification deviates from the recommendation in {{Section 5.3 of RFC6363}} by placing the Explicit Source FEC Payload ID before the Source Data, as BTPU has no capability analogous to common header compression, as found in Robust Header Compression (ROHC) {{?RFC3095}}, and therefore to maintain consistency with other BTPU messages, the metadata precedes the data.
 
@@ -246,7 +243,7 @@ Repair Symbol Data:
 
 The new Messages and mechanisms in this document do not add additional security considerations, nor impact the existing security considerations outlined in {{BTPU}} and {{RFC6363}}.
 
-FEC mechanisms do not provide authentication or integrity protection.  Malicious or corrupted FEC Messages could cause a receiver to reconstruct an incorrect bundle.  If a receiver detects an error during FEC decoding, it SHOULD cancel the Transfer as defined in Section 5.4 of {{BTPU}}.  Additionally, deployments SHOULD use upper-layer integrity mechanisms, such as BPSec {{!RFC9172}}, to detect corruption in reconstructed bundles.  When upper-layer integrity verification fails, implementations SHOULD discard the reconstructed bundle as per the upper-layer's security policy.
+FEC mechanisms do not provide authentication or integrity protection.  Malicious or corrupted FEC Messages could cause a receiver to reconstruct an incorrect bundle.  If a receiver detects an error during FEC decoding, it SHOULD cancel the Transfer as defined in {{Section 4.2 of BTPU}}.  Additionally, deployments SHOULD use upper-layer integrity mechanisms, such as BPSec {{!RFC9172}}, to detect corruption in reconstructed bundles.  When upper-layer integrity verification fails, implementations SHOULD discard the reconstructed bundle as per the upper-layer's security policy.
 
 # IANA Considerations
 
