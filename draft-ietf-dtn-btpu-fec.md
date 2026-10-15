@@ -93,7 +93,7 @@ The following table summarizes the differences between the two approaches:
 | Per-Message Overhead | Lower (no FSSI) | Higher (includes FSSI) |
 {: #tab-fec-comparison align="left" title="Comparison of Pre-agreed and Explicit FEC"}
 
-Irrespective of whether Pre-agreed or Explicit FEC is in use for a Transfer, the FEC Framework Configuration Information MUST NOT change mid-transfer.  If a receiver detects a change in FEC Framework Configuration Information during a Transfer, it MUST consider any incomplete Transfer affected by the change as cancelled, as defined in {{Section 4.2 of BTPU}}.
+Irrespective of whether Pre-agreed or Explicit FEC is in use for a Transfer, the FEC Framework Configuration Information MUST NOT change mid-transfer.  A switch between Pre-agreed and Explicit FEC Messages within a Transfer is considered a change in FEC Framework Configuration Information, even if both describe the same configuration, as a receiver might not have the FEC Instance ID mapping needed to determine whether they do.  If a receiver detects a change in FEC Framework Configuration Information during a Transfer, it MUST consider any incomplete Transfer affected by the change as cancelled, as defined in {{Section 4.2 of BTPU}}.
 
 ## Pre-agreed FEC Instance ID  {#instance-id}
 
