@@ -105,7 +105,7 @@ Configuration of the mapping of FEC Instance ID to FEC scheme information MUST b
 
 ## FEC Transfer Operation
 
-FEC Messages share the same Transfer Number space as the core BTPU Transfer Messages, and the Transfer Window algorithm defined in {{BTPU}} applies to FEC Transfers.  However, a sender MUST NOT mix FEC Messages and core BTPU Transfer Messages (Transfer Segment or Transfer End) within the same Transfer.  If a receiver detects such mixing, it MUST consider the Transfer cancelled, as defined in {{Section 4.2 of BTPU}}.  The Transfer Cancel Message, as defined in {{BTPU}}, MAY be used to cancel an FEC Transfer.
+The FEC Source and FEC Repair Messages defined in this document are Transfer Messages, as defined in {{BTPU}}: they share the same Transfer Number space as the core BTPU Transfer Messages, and the Transfer Window algorithm defined in {{BTPU}} applies to them.  However, a sender MUST NOT mix FEC Messages and core BTPU Transfer Messages (Transfer Segment or Transfer End) within the same Transfer.  If a receiver detects such mixing, it MUST consider the Transfer cancelled, as defined in {{Section 4.2 of BTPU}}.  The Transfer Cancel Message, as defined in {{BTPU}}, MAY be used to cancel an FEC Transfer.
 
 Unlike core BTPU, FEC Transfers do not use an explicit Transfer End Message to signal completion.  Instead, the FEC scheme determines when sufficient ADUs and Repair Symbols have been received to reconstruct the original bundle.  The Transfer Window algorithm provides the receiver with an upper bound on how long to wait for FEC Messages associated with a given Transfer before considering it complete or failed.  The Bundle Length Hint, if present, can be used to verify that the reconstructed bundle has the expected size.
 
