@@ -111,7 +111,7 @@ Unlike core BTPU, FEC Transfers do not use an explicit Transfer End Message to s
 
 # Message Definitions
 
-All new Messages introduced in this document follow the common message format as defined in {{Section 7 of BTPU}}, and Hint Items MAY be included in these Messages.  The Bundle Length Hint, as defined in {{BTPU}}, MAY be included in FEC Source and FEC Repair Messages to signal the total length of the bundle being transferred.
+All new Messages introduced in this document follow the common message format as defined in {{Section 7 of BTPU}}, and Hint Items MAY be included in these Messages.  The Bundle Length Hint, as defined in {{BTPU}}, is valid in the FEC Source and FEC Repair Messages defined in this document, where it signals the total length of the bundle being transferred.
 
 This specification deviates from the recommendation in {{Section 5.3 of RFC6363}} by placing the Explicit Source FEC Payload ID before the Source Data, as BTPU has no capability analogous to common header compression, as found in Robust Header Compression (ROHC) {{?RFC3095}}, and therefore to maintain consistency with other BTPU messages, the metadata precedes the data.
 
